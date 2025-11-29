@@ -16,6 +16,8 @@
 
 namespace local_sqlquerybuilder\query\where;
 
+use local_sqlquerybuilder\contracts\like_options;
+
 /**
  * Compares a column with a string
  *
@@ -49,7 +51,7 @@ class where_like extends where_expression {
             $this->options->accentsensitive,
             $this->negate,
             $this->options->escapestring,
-        );        
+        );
     }
 
 

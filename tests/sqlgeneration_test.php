@@ -19,6 +19,7 @@ namespace local_sqlquerybuilder;
 use core\di;
 use advanced_testcase;
 use local_sqlquerybuilder\contracts\i_db;
+use local_sqlquerybuilder\contracts\i_condition;
 
 /**
  * Testing the SQL generation
@@ -34,6 +35,7 @@ final class sqlgeneration_test extends advanced_testcase {
 
 
     public function setUp(): void {
+        parent::setUp();
         $this->db = di::get(i_db::class);
     }
 
@@ -61,8 +63,13 @@ final class sqlgeneration_test extends advanced_testcase {
      * @return void
      */
     public function test_custom_query_from(): void {
-        $expected = 'SELECT * FROM (VALUES ((SELECT * FROM {users} WHERE id = ?), (SELECT * FROM {entries} WHERE id = ?), \'Tryit\')) AS custom(a,b,tryit)';
-        $expectedparams = [1, 2]; 
+        $expected = 'SELECT * FROM (VALUES ' .
+                    '((SELECT * FROM {users} WHERE id = ?), ' .
+                    '(SELECT * FROM {entries} WHERE id = ?), ' .
+                    '\'Tryit\')) ' .
+                    'AS custom(a,b,tryit)';
+        $expected = str_replace("\n", '', $expected);
+        $expectedparams = [1, 2];
 
         $subquerya = $this->db->table('users')
             ->where('id', '=', 1);
@@ -290,6 +297,19 @@ final class sqlgeneration_test extends advanced_testcase {
 
         $actual = $this->db->table('unknown')
             ->where_in('field', $latestcourses);
+
+        $this->assertEquals($expected, $actual->get_sql());
+        $this->assertEquals($expectedparams, $actual->get_params());
+    }
+
+    public function test_subquery_join_where_in(): void {
+        $expected = "SELECT * FROM {unknown} JOIN {course} ON id IN (?,?,?)";
+        $expectedparams = [1, 2, 3];
+
+        $actual = $this->db->table('unknown')
+            ->join('course', function (i_condition $condition) {
+                $condition->where_in('id', [1, 2, 3]);
+            });
 
         $this->assertEquals($expected, $actual->get_sql());
         $this->assertEquals($expectedparams, $actual->get_params());
