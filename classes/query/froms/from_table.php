@@ -14,28 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\columns;
+namespace local_sqlquerybuilder\query\froms;
 
 /**
- * Raw column select
+ * Data select from table
+ *
+ * e.g. a table from the database
  *
  * @package local_sqlquerybuilder
  * @copyright   Konrad Ebel
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class column_raw implements column_expression {
-    /** @var string Raw sql column */
-    private string $sql;
-    /** @var bool Should be the only column used */
-    private bool $onlycolumn;
-
+class from_table implements from_expression {
     /**
      * Constructor
      *
-     * @param string $sql raw sql column
+     * @param string $table Table name
+     * @param string|null $alias Alias for the tablename
      */
-    public function __construct(string $sql, bool $onlycolumn = false) {
-        $this->sql = $sql;
+    public function __construct(
+        /**
+         * @var string|null table name
+         */
+        private string $table,
+        /**
+         * @var string|null table alias
+         */
+        private ?string $alias,
+    ) {
     }
 
     /**
@@ -43,16 +49,21 @@ class column_raw implements column_expression {
      *
      * @return string column for select as sql
      */
-    public function export(): string {
-        return $this->sql;
+    public function get_sql(): string {
+        if (is_null(value: $this->alias)) {
+            return "{" . $this->table . "} ";
+        }
+
+        return "{" . $this->table . "} " . $this->alias . " ";
     }
 
     /**
-     * Whether this should be the only column used
+     * No params needed
      *
-     * @return bool Specified by programmer
+     *
+     * @return array No params needed
      */
-    public function standalone(): bool {
-        return $this->onlycolumn;
+    public function get_params(): array {
+        return [];
     }
 }

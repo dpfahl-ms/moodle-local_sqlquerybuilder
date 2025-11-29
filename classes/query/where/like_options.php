@@ -14,27 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\columns;
+namespace local_sqlquerybuilder\query\where;
 
 /**
- * Interface for select columns
+ * Options to compare two strings
  *
- * @package local_sqlquerybuilder
- * @copyright   Konrad Ebel
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     local_sqlquerybuilder
+ * @copyright   2025, Konrad Ebel <despair2400@proton.me>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface column_expression {
-    /**
-     * Exports as sql
-     *
-     * @return string column for select as sql
-     */
-    public function export(): string;
-
-    /**
-     * Whether the column should be the only selected one
-     *
-     * @return bool if true, this column should be the only one
-     */
-    public function standalone(): bool;
+class like_options {
+    public bool $casesensitive = false;
+    public bool $accentsensitive = false;
+    public bool $escape = false;
+    public string $escapestring = '\\';
 }

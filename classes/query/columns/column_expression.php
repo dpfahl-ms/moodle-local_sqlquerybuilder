@@ -14,18 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\joins;
+namespace local_sqlquerybuilder\query\columns;
+
+use local_sqlquerybuilder\contracts\i_expression;
 
 /**
- * Different allowed join types for moodle
+ * Interface for select columns
  *
+ * @package local_sqlquerybuilder
  * @copyright   Konrad Ebel
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-enum join_types: string {
-    case INNER = "";
-    case LEFT = "LEFT";
-    case FULL = "FULL";
-    case RIGHT = "RIGHT";
-    case CROSS = "CROSS";  // Todo: not supported right now.
+interface column_expression extends i_expression {
+    /**
+     * Whether the column should be the only selected one
+     *
+     * @return bool if true, this column should be the only one
+     */
+    public function standalone(): bool;
 }

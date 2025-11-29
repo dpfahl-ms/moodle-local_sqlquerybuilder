@@ -14,17 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace local_sqlquerybuilder\query\where;
+
 /**
- * Plugin strings are defined here.
+ * Compares fulltext
  *
  * @package     local_sqlquerybuilder
- * @category    string
- * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
+ * @copyright   2025, Konrad Ebel <despair2400@proton.me>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class where_fulltext extends where_expression {
 
-defined('MOODLE_INTERNAL') || die();
+    public function __construct(
+        private string $column,
+        private string $value,
+        private bool $negate = false,
+    ) {}
 
-$string['pluginname'] = 'SQL Query Builder';
+    public function get_sql(): string {
+        global $DB;
+        $sql = '';
+        
+        if ($this->negate) {
+            $sql = 'NOT ';
+        }
 
-$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
+        $sql .= $DB->sql_compare_text($this->column, strlen($this->value));
+        return $sql . ' = ?';
+    }
+
+
+    public function get_params(): array {
+        return [$this->value];
+    }
+}

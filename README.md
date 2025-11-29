@@ -5,8 +5,7 @@ This plugin is a library used for other plugins. It allows developers
 to create queries in a flexible, safe and easy way. 
 
 > ⚠️ **SQL Injections**. <br>
-> This plugin currently does not perform parameter binding or input validation.  
-**Do not use untrusted user input** in queries. It is planned to fix this in future versions.
+> Only the parameters in the value part get sanatized.
 
 > Work in Progress!
 
@@ -28,10 +27,11 @@ $paul = db::table('user')->where('firstname', '=', 'Paul')
   - adapt similar queries for different use-cases
 
 ## TODOS
-- Collect parameters to sanitize them
-- Provide LIMIT and OFFSET
-- Allow parameters in select
+- Allow subqueries in where statement
+- Allow equal functions (case sensitive, text functions ...)
+- Add union function
 - Provide more raw methods to make the plugin more flexible
+- JSON Functions
 - Update functionality
 - Delete functionality
 - Create functionality

@@ -14,44 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\orderings;
+namespace local_sqlquerybuilder\query\where;
+
+use local_sqlquerybuilder\contracts\i_expression;
 
 /**
- * Represents an ordering
+ * Where expression
  *
  * @package     local_sqlquerybuilder
- * @copyright   Konrad Ebel
+ * @copyright   2025, Konrad Ebel <despair2400@proton.me>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class ordering {
-    /**
-     * Constructor
-     *
-     * @param string $column Expressions to order by
-     * @param bool $ascending Whether to filter ascending or descending
-     */
-    public function __construct(
-        /**
-         * @var string column name
-         */
-        private string $column,
-        /**
-         * @var bool
-         */
-        private bool $ascending,
-    ) {
+abstract class where_expression implements i_expression {
+    public function get_params(): array {
+        return [];
     }
 
-    /**
-     * Exports as sql
-     *
-     * @return string order by as sql
-     */
-    public function export(): string {
-        if ($this->ascending) {
-            return "$this->column ASC";
-        } else {
-            return "$this->column DESC";
-        }
+    public function __toString() {
+        return $this->get_sql();
     }
 }

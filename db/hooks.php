@@ -14,20 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\joins;
+use \core\hook\di_configuration;
+use \local_sqlquerybuilder\local\dependency_declarations;
 
-/**
- * Interface for join expressions
- *
- * @package     local_sqlquerybuilder
- * @copyright   Konrad Ebel
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-interface join_expression {
-    /**
-     * Exports as sql
-     *
-     * @return string join as sql
-     */
-    public function export(): string;
-}
+$callbacks = [
+    [
+        'hook' => di_configuration::class,
+        'callback' => dependency_declarations::class . '::configure_dependencies',
+    ],
+];

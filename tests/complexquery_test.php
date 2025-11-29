@@ -18,6 +18,8 @@ namespace local_sqlquerybuilder;
 
 use core\clock;
 use core\di;
+use advanced_testcase;
+use local_sqlquerybuilder\contracts\i_db;
 
 /**
  * Testing the SQL generation
@@ -28,7 +30,12 @@ use core\di;
  * @copyright   2025 Matthias Opitz <m.opitz@ucl.ac.uk>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class complexquery_test extends \advanced_testcase {
+final class complexquery_test extends advanced_testcase {
+    private i_db $db;
+
+    public function setUp(): void {
+        $this->db = di::get(i_db::class);
+    }
 
     public function test_a_complex_query(): void {
         global $DB;
@@ -42,15 +49,15 @@ final class complexquery_test extends \advanced_testcase {
 
         // Enrol both users.
         $studentrole = $DB->get_record('role', ['shortname' => 'student'], '*', MUST_EXIST);
-        $manualplugin = enrol_get_plugin('manual');
         $enrolinstances = enrol_get_instances($course->id, true);
         $manualinstance = array_values(array_filter($enrolinstances, fn($e) => $e->enrol === 'manual'))[0];
-        $manualplugin->enrol_user($manualinstance, $user1->id, $studentrole->id);
-        $manualplugin->enrol_user($manualinstance, $user2->id, $studentrole->id);
 
-        $now = di::get(clock::class)->time();
+        $manualenrolplugin = enrol_get_plugin('manual');
+        $manualenrolplugin->enrol_user($manualinstance, $user1->id, $studentrole->id);
+        $manualenrolplugin->enrol_user($manualinstance, $user2->id, $studentrole->id);
 
         // Expected result using raw SQL.
+        $now = di::get(clock::class)->time();
         $sql = "SELECT DISTINCT ue.userid
               FROM {enrol} e
               JOIN {user_enrolments} ue ON ue.enrolid = e.id
@@ -59,15 +66,17 @@ final class complexquery_test extends \advanced_testcase {
                AND u.deleted = 0
                AND u.suspended = 0
                AND (ue.timestart = 0 OR ue.timestart <= :now1)
-               AND (ue.timeend = 0 OR ue.timeend >= :now2)";
+               AND (ue.timeend = 0 OR ue.timeend >= :now2)
+          ORDER BY ue.userid";
         $params = [
             'now1' => $now,
             'now2' => $now,
         ];
         $expected = $DB->get_records_sql($sql, $params);
 
+
         // Actual result using query builder.
-        $actual = db::table('enrol', 'e')
+        $actual = $this->db->table('enrol', 'e')
             ->distinct()
             ->join('user_enrolments', ['ue.enrolid', '=', 'e.id'], 'ue')
             ->join('user', ['u.id', '=', 'ue.userid'], 'u')
@@ -75,20 +84,11 @@ final class complexquery_test extends \advanced_testcase {
             ->where('ue.status', '=', 0)
             ->where('u.deleted', '=', 0)
             ->where('u.suspended', '=', 0)
-            ->where('ue.timestart', '=', 0)
-            ->orwhere('ue.timestart', '<=', $now)
-            ->where('ue.timeend', '=', 0)
-            ->orwhere('ue.timeend', '>=', $now)
+            ->where_currently_active('ue.timestart', 'ue.timeend')
+            ->order_asc("ue.userid")
             ->get();
 
-        // Compare IDs returned.
-        $expectedids = array_keys($expected);
-        $actualids   = array_map(fn($r) => $r->userid, $actual);
-
-        sort($expectedids);
-        sort($actualids);
-
-        $this->assertEquals($expectedids, $actualids, 'QueryBuilder must return the same enrolled user IDs as raw SQL');
+        $this->assertEquals($expected, $actual, 'QueryBuilder must return the same enrolled user IDs as raw SQL');
     }
 
 }

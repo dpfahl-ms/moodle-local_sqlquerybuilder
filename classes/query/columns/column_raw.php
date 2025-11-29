@@ -14,30 +14,37 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\columns;
+namespace local_sqlquerybuilder\query\columns;
 
 /**
- * Basic column with alias for select statements
+ * Raw column select
  *
  * @package local_sqlquerybuilder
  * @copyright   Konrad Ebel
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class column implements column_expression {
-    /** @var string Name of the column */
-    protected string $name;
-    /** @var string|null Alias for the column name */
-    protected ?string $alias;
+class column_raw implements column_expression {
 
     /**
      * Constructor
      *
-     * @param string $name Name of the column
-     * @param string|null $alias Alias for the column name
+     * @param string $sql raw sql column
+     * @param mixed[] $params a list of params in the same order like the raw sql
+     * @param bool $onlycolumn true if this should be the only column selected
      */
-    public function __construct(string $name, ?string $alias = null) {
-        $this->name = $name;
-        $this->alias = $alias;
+    public function __construct(
+        private string $sql,
+        private array $params,
+        private bool $onlycolumn = false
+    ) {}
+
+    /**
+     * Exports as sql
+     *
+     * @return string column for select as sql
+     */
+    public function get_sql(): string {
+        return $this->sql;
     }
 
     /**
@@ -45,20 +52,16 @@ class column implements column_expression {
      *
      * @return string column for select as sql
      */
-    public function export(): string {
-        if ($this->alias === null) {
-            return $this->name;
-        }
-
-        return "($this->name) AS $this->alias";
+    public function get_params(): array {
+        return $this->params;
     }
 
     /**
-     * Can be used with other columns
+     * Whether this should be the only column used
      *
-     * @return bool False
+     * @return bool Specified by programmer
      */
     public function standalone(): bool {
-        return false;
+        return $this->onlycolumn;
     }
 }

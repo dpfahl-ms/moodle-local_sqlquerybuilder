@@ -14,21 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\froms;
+namespace local_sqlquerybuilder\query\froms;
+
+use local_sqlquerybuilder\contracts\i_expression;
 
 /**
- * Interface for from types
+ * From expression
  *
- * @package local_sqlquerybuilder
+ * @package     local_sqlquerybuilder
  * @copyright   Konrad Ebel
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface from_expression {
-    /**
-     * Exports as sql
-     *
-     * @param bool $rawsql If set to true it will be exported for a raw sql query
-     * @return string from as sql
-     */
-    public function export(bool $rawsql = false): string;
+interface from_expression extends i_expression {
 }

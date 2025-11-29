@@ -14,17 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace local_sqlquerybuilder\query\where;
+
 /**
- * Plugin strings are defined here.
+ * Checks for null or not null
  *
  * @package     local_sqlquerybuilder
- * @category    string
- * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
+ * @copyright   2025, Konrad Ebel <despair2400@proton.me>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+class where_is_null extends where_expression {
 
-defined('MOODLE_INTERNAL') || die();
+    public function __construct(
+        private string $column,
+        private bool $negate = false,
+    ) {
+    }
 
-$string['pluginname'] = 'SQL Query Builder';
+    public function get_sql(): string {
+        if ($this->negate) {
+            return "$this->column IS NOT NULL";
+        }
 
-$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
+        return "$this->column IS NULL";
+    }
+
+
+    public function get_params(): array {
+        return [];
+    }
+}

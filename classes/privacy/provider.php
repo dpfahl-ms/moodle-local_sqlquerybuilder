@@ -14,28 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\columns;
+namespace local_sqlquerybuilder\privacy;
+
+use core_privacy\local\metadata\null_provider;
 
 /**
- * Types of aggregations in SQL.
- *
- * @package    local_sqlquerybuilder
- * @copyright  Konrad Ebel
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Data privacy provider
  */
-enum aggregation: string {
-    // Maximum value.
-    case MAX = 'MAX';
-
-    // Minimum value.
-    case MIN = 'MIN';
-
-    // Average value.
-    case AVG = 'AVG';
-
-    // Sum of values.
-    case SUM = 'SUM';
-
-    // Count of values.
-    case COUNT = 'COUNT';
+class provider implements null_provider {
+    /**
+     * Get the language string identifier
+     *
+     * @return string Explaination why the plugin stores no user data
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
 }

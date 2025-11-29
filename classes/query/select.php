@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder;
+namespace local_sqlquerybuilder\query;
 
-use local_sqlquerybuilder\columns\aggregation;
-use local_sqlquerybuilder\columns\column_aggregate;
-use local_sqlquerybuilder\columns\column_expression;
-use local_sqlquerybuilder\columns\column_raw;
-use local_sqlquerybuilder\columns\column;
+use local_sqlquerybuilder\contracts\i_expression;
+use local_sqlquerybuilder\query\columns\aggregation;
+use local_sqlquerybuilder\query\columns\column_aggregate;
+use local_sqlquerybuilder\query\columns\column_raw;
+use local_sqlquerybuilder\query\columns\column;
 
 /**
  * Trait that builds a sql statement, that can be exported via
@@ -30,9 +30,9 @@ use local_sqlquerybuilder\columns\column;
  * @copyright   Konrad Ebel
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-trait select {
-    /** @var column_expression[] SQL Select Parts */
-    protected array $select = [];
+class select implements i_expression {
+    /** @var i_expression[] Selected columns */
+    protected array $columns = [];
 
     /** @var bool Whether to use DISTINCT OR ALL */
     protected bool $distinct = false;
@@ -41,12 +41,9 @@ trait select {
      * Selects all columns
      *
      * Should not be used with other selects
-     *
-     * @return $this Instance of the Builder
      */
-    public function select_all(): static {
-        $this->select = [new column_raw('*', true)];
-        return $this;
+    public function select_all(): void {
+        $this->columns = [new column_raw('*', [], true)];
     }
 
     /**
@@ -54,23 +51,18 @@ trait select {
      *
      * @param string $name Name of the column
      * @param string|null $alias Alias for the column name
-     * @return $this Instance of the Builder
      */
-    public function select(string $name, ?string $alias = null): static {
-        $this->select[] = new column($name, $alias);
-        return $this;
+    public function select(string $name, ?string $alias = null): void {
+        $this->columns[] = new column($name, $alias);
     }
 
     /**
      * Gives back the count of all entries
      *
      * Should not be used with other selects
-     *
-     * @return $this Instance of the Builder
      */
-    public function select_count(): static {
-        $this->select[] = new column_aggregate(aggregation::COUNT, '1');
-        return $this;
+    public function select_count(): void {
+        $this->columns = [new column_aggregate(aggregation::COUNT, '1')];
     }
 
     /**
@@ -80,11 +72,9 @@ trait select {
      *
      * @param string $name Name of the column
      * @param string|null $alias Alias for the column name
-     * @return $this Instance of the Builder
      */
-    public function select_max(string $name, ?string $alias = null): static {
-        $this->select[] = new column_aggregate(aggregation::MAX, $name, $alias);
-        return $this;
+    public function select_max(string $name, ?string $alias = null): void {
+        $this->columns = [new column_aggregate(aggregation::MAX, $name, $alias)];
     }
 
     /**
@@ -94,11 +84,9 @@ trait select {
      *
      * @param string $name Name of the column
      * @param string|null $alias Alias for the column name
-     * @return $this Instance of the Builder
      */
-    public function select_min(string $name, ?string $alias = null): static {
-        $this->select[] = new column_aggregate(aggregation::MIN, $name, $alias);
-        return $this;
+    public function select_min(string $name, ?string $alias = null): void {
+        $this->columns = [new column_aggregate(aggregation::MIN, $name, $alias)];
     }
 
     /**
@@ -108,21 +96,16 @@ trait select {
      *
      * @param string $name Name of the column
      * @param string|null $alias Alias for the column name
-     * @return $this Instance of the Builder
      */
-    public function select_sum(string $name, ?string $alias = null): static {
-        $this->select[] = new column_aggregate(aggregation::SUM, $name, $alias);
-        return $this;
+    public function select_sum(string $name, ?string $alias = null): void {
+        $this->columns = [new column_aggregate(aggregation::SUM, $name, $alias)];
     }
 
     /**
      * Only distinct columns are returned
-     *
-     * @return $this Instance of the Builder
      */
-    public function distinct(): static {
+    public function distinct(): void {
         $this->distinct = true;
-        return $this;
     }
 
     /**
@@ -130,20 +113,35 @@ trait select {
      *
      * @return string sql select statement
      */
-    protected function export_select(): string {
+    public function get_sql(): string {
         $select = 'SELECT ';
 
         if ($this->distinct) {
             $select .= 'DISTINCT ';
         }
 
-        if (empty($this->select)) {
+        if (empty($this->columns)) {
             $this->select_all();
         }
 
-        $exportedcolumns = array_map(fn (column_expression $col) => $col->export(), $this->select);
+        $exportedcolumns = array_map(fn (i_expression $col) => $col->get_sql(), $this->columns);
         $select .= implode(', ', $exportedcolumns);
 
         return $select;
+    }
+
+    /**
+     * Gives back all params of the select part
+     * 
+     * @return array All params used in select
+     */
+    public function get_params(): array {
+        $params = [];
+
+        foreach ($this->columns as $col) {
+            $params[] = $col->get_params();
+        }
+
+        return array_merge(...$params);
     }
 }

@@ -14,17 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-/**
- * Plugin strings are defined here.
- *
- * @package     local_sqlquerybuilder
- * @category    string
- * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace local_sqlquerybuilder\local;
 
-defined('MOODLE_INTERNAL') || die();
+use core\hook\di_configuration;
+use local_sqlquerybuilder\contracts\i_db;
+use local_sqlquerybuilder\query\db;
 
-$string['pluginname'] = 'SQL Query Builder';
-
-$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
+class dependency_declarations {
+    public static function configure_dependencies(di_configuration $hook): void {
+        // Define i_db
+        $hook->add_definition(
+            id: i_db::class,
+            definition: function (): i_db {
+                return new db();
+            }
+        );
+    }
+}

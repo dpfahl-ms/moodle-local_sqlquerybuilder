@@ -14,52 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\columns;
+namespace local_sqlquerybuilder\query\froms;
+
+use local_sqlquerybuilder\contracts\i_query;
 
 /**
- * Aggregation column with alias for select statements
+ * Data select from a custom query
  *
- * @package local_sqlquerybuilder
+ * @package     local_sqlquerybuilder
  * @copyright   Konrad Ebel
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class column_aggregate extends column {
-    /** @var aggregation Type of aggregation */
-    private aggregation $type;
-
+class from_query implements from_expression {
     /**
      * Constructor
      *
-     * @param aggregation $type Aggregation type to use
-     * @param string $name Name of the column
-     * @param string|null $alias Alias for the column name
+     * @param i_query $sourcequery Query that builds a table
+     * @param string $alias Alias for the table builded by the query (alias is needed!)
      */
-    public function __construct(aggregation $type, string $name, ?string $alias = null) {
-        $this->type = $type;
-        parent::__construct($name, $alias);
+    public function __construct(
+        private i_query $sourcequery,
+        private string $alias,
+    ) {
     }
 
     /**
      * Exports as sql
      *
+     * @param bool $rawsql Has no changes here
      * @return string column for select as sql
      */
-    public function export(): string {
-        $column = $this->type->value . "($this->name)";
-
-        if ($this->alias !== null) {
-            $column .= " AS $this->alias";
-        }
-
-        return $column;
+    public function get_sql(): string {
+        $from = "($this->sourcequery) AS $this->alias";
+        return $from;
     }
 
-    /**
-     * Should be the only column used
-     *
-     * @return bool True
-     */
-    public function standalone(): bool {
-        return true;
+    public function get_params(): array {
+        return $this->sourcequery->get_params();
     }
 }

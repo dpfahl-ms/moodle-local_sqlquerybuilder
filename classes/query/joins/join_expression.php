@@ -14,17 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace local_sqlquerybuilder\query\joins;
+
 /**
- * Plugin strings are defined here.
+ * Interface for join expressions
  *
  * @package     local_sqlquerybuilder
- * @category    string
- * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   Konrad Ebel
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'SQL Query Builder';
-
-$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
+interface join_expression {
+    /**
+     * Exports as sql
+     *
+     * @return string join as sql
+     */
+    public function export(): string;
+}

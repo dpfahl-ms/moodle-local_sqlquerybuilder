@@ -14,17 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace local_sqlquerybuilder\query\columns;
+
 /**
- * Plugin strings are defined here.
+ * Types of aggregations in SQL.
  *
- * @package     local_sqlquerybuilder
- * @category    string
- * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_sqlquerybuilder
+ * @copyright  Konrad Ebel
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+enum aggregation: string {
+    // Maximum value.
+    case MAX = 'MAX';
 
-defined('MOODLE_INTERNAL') || die();
+    // Minimum value.
+    case MIN = 'MIN';
 
-$string['pluginname'] = 'SQL Query Builder';
+    // Average value.
+    case AVG = 'AVG';
 
-$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
+    // Sum of values.
+    case SUM = 'SUM';
+
+    // Count of values.
+    case COUNT = 'COUNT';
+}

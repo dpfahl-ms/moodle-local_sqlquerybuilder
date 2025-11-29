@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder;
+namespace local_sqlquerybuilder\query;
+
+use local_sqlquerybuilder\contracts\i_expression;
 
 /**
  * Grouping trait
@@ -23,7 +25,7 @@ namespace local_sqlquerybuilder;
  * @copyright   2025
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-trait grouping {
+class grouping implements i_expression {
     /**
      * @var array of group bu clauses
      */
@@ -37,11 +39,9 @@ trait grouping {
      * Group by one or more columns
      *
      * @param string ...$column Columns to group by
-     * @return $this Instance of the Builder
      */
-    public function groupby(...$column) {
+    public function group_by(string ...$column): void {
         $this->groupby = $column;
-        return $this;
     }
 
     /**
@@ -50,16 +50,14 @@ trait grouping {
      * @param string $column The column name
      * @param string $operator The comparison operator (=, !=, >, <, >=, <=, LIKE, etc.)
      * @param mixed $value The value to compare against
-     * @return $this Instance of the Builder
      */
-    public function having($column, $operator, $value) {
+    public function having(string $column, string $operator, mixed $value): void {
         $this->having[] = [
             'type' => 'AND',
             'column' => $column,
             'operator' => $operator,
             'value' => $value,
         ];
-        return $this;
     }
 
     /**
@@ -68,16 +66,14 @@ trait grouping {
      * @param string $column The column name
      * @param string $operator The comparison operator (=, !=, >, <, >=, <=, LIKE, etc.)
      * @param mixed $value The value to compare against
-     * @return $this Instance of the Builder
      */
-    public function orhaving($column, $operator, $value) {
+    public function or_having(string $column, string $operator, mixed $value): void {
         $this->having[] = [
             'type' => 'OR',
             'column' => $column,
             'operator' => $operator,
             'value' => $value,
         ];
-        return $this;
     }
 
     /**
@@ -85,7 +81,7 @@ trait grouping {
      *
      * @return string The complete GROUP BY clause SQL string
      */
-    protected function export_grouping(): string {
+    public function get_sql(): string {
         if (empty($this->groupby)) {
             return '';
         }
@@ -104,6 +100,11 @@ trait grouping {
                     ' ' . $having['value'] . ' ';
             }
         }
+
         return preg_replace('/\s{2,}/', ' ', $groupbyclause);
+    }
+
+    public function get_params(): array {
+        return [];
     }
 }
