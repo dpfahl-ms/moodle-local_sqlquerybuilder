@@ -19,10 +19,12 @@
  *
  * @package     local_sqlquerybuilder
  * @category    string
- * @copyright   2025 Your Name <you@example.com>
+ * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'SQL Query Builder';
+
+$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
