@@ -26,9 +26,10 @@ namespace local_sqlquerybuilder\contracts;
 interface i_db {
     /**
      * Return a new query object for the given table.
+     *
      * @param string|i_query $nameorquery Name the table name or subquery
      * @param string|null $alias Alias for the tablename
-     * @return i_query
+     * @return i_query Returns itself
      */
     public function table(string|i_query $nameorquery, ?string $alias = null): i_query;
 }

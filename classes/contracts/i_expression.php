@@ -25,6 +25,17 @@ namespace local_sqlquerybuilder\contracts;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 interface i_expression {
+    /**
+     * Gets the sql for the expression
+     *
+     * @return string SQL Part of this expression
+     */
     public function get_sql(): string;
+
+    /**
+     * Gets the params for the expression
+     *
+     * @param string Needed params of this expression (in correct order)
+     */
     public function get_params(): array;
 }
