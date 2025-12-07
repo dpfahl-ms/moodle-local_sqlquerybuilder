@@ -17,25 +17,18 @@
 namespace local_sqlquerybuilder\contracts;
 
 /**
- * Expression Interface
+ * Interface for creating conditions
  *
- * @author      Konrad Ebel <despair2400@proton.me>
  * @package     local_sqlquerybuilder
- * @copyright   2025, Konrad Ebel <despair2400@proton.me>
+ * @copyright   2025 Konrad Ebel <despair2400@proton.me>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface i_expression {
+interface i_condition_factory {
     /**
-     * Gets the sql for the expression
+     * Creates an condition
      *
-     * @return string SQL Part of this expression
+     * needed cause moodle only instantiates one class in ci
+     * the object is always static
      */
-    public function get_sql(): string;
-
-    /**
-     * Gets the params for the expression
-     *
-     * @return array Needed params of this expression (in correct order)
-     */
-    public function get_params(): array;
+    public function create(): i_condition;
 }

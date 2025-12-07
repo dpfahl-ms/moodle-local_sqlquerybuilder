@@ -14,28 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\contracts;
+namespace local_sqlquerybuilder\query;
+
+use local_sqlquerybuilder\contracts\i_condition_factory;
 
 /**
- * Expression Interface
+ * Creates a new condition
  *
- * @author      Konrad Ebel <despair2400@proton.me>
  * @package     local_sqlquerybuilder
- * @copyright   2025, Konrad Ebel <despair2400@proton.me>
+ * @copyright   2025 Konrad Ebel <despair2400@proton.me>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface i_expression {
-    /**
-     * Gets the sql for the expression
-     *
-     * @return string SQL Part of this expression
-     */
-    public function get_sql(): string;
-
-    /**
-     * Gets the params for the expression
-     *
-     * @return array Needed params of this expression (in correct order)
-     */
-    public function get_params(): array;
+class condition_factory implements i_condition_factory {
+    public function create(): condition {
+        return new condition();
+    }
 }
