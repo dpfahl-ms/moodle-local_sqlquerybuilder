@@ -26,7 +26,7 @@ namespace local_sqlquerybuilder\contracts;
 interface i_condition_factory {
     /**
      * Creates an condition
-     * 
+     *
      * needed cause moodle only instantiates one class in ci
      * the object is always static
      */

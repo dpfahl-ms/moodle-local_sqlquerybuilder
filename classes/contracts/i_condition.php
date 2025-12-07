@@ -32,7 +32,7 @@ interface i_condition extends i_expression {
      *
      * @param string $column Column name to compare.
      * @param string $operator Comparison operator.
-     * @param mixed|i_query $value Scalar value or query returning a value.
+     * @param mixed $value Scalar value or query returning a value.
      * @return i_condition Returns itself.
      */
     public function where(string $column, string $operator, mixed $value): i_condition;
@@ -44,7 +44,7 @@ interface i_condition extends i_expression {
      *
      * @param string $column Column name to compare.
      * @param string $operator Comparison operator.
-     * @param string $othercolumn Other column name to compare. 
+     * @param string $othercolumn Other column name to compare.
      * @return i_condition Returns itself.
      */
     public function where_column(string $column, string $operator, string $othercolumn): i_condition;
@@ -55,7 +55,7 @@ interface i_condition extends i_expression {
      *
      * @param string $column Column name to compare.
      * @param string $operator Supports: like, <>, <, <=, >, >=, =
-     * @param mixed|i_query $value value or query returning a value 
+     * @param mixed $value value or query returning a value
      * @return i_condition Returns itself
      */
     public function or_where(string $column, string $operator, mixed $value): i_condition;
@@ -65,7 +65,7 @@ interface i_condition extends i_expression {
      *
      * @param string $column Column name to compare.
      * @param string $operator Supports: like, <>, <, <=, >, >=, =
-     * @param mixed|i_query $value value or query returning a value 
+     * @param mixed $value value or query returning a value
      * @return i_condition Returns itself
      */
     public function where_not(string $column, string $operator, mixed $value): i_condition;
@@ -76,7 +76,7 @@ interface i_condition extends i_expression {
      *
      * @param string $column Column name to compare.
      * @param string $operator Supports: like, <>, <, <=, >, >=, =
-     * @param mixed|i_query $value value or query returning a value 
+     * @param mixed $value value or query returning a value
      * @return i_condition Returns itself
      */
     public function or_where_not(string $column, string $operator, mixed $value): i_condition;
