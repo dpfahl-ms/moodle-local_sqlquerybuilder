@@ -35,7 +35,7 @@ interface i_expression {
     /**
      * Gets the params for the expression
      *
-     * @param array Needed params of this expression (in correct order)
+     * @return array Needed params of this expression (in correct order)
      */
     public function get_params(): array;
 }
