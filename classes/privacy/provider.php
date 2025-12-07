@@ -14,17 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
+namespace local_sqlquerybuilder\privacy;
+
+use core_privacy\local\metadata\null_provider;
+
 /**
- * Plugin strings are defined here.
+ * Data privacy provider
  *
- * @package     local_sqlquerybuilder
- * @category    string
- * @copyright   2025 Konrad Ebel <konrad.ebel@posteo.com>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright Konrad Ebel <konrad.ebel@posteo.com>
+ * @package   local_sqlquerybuilder
+ * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'SQL Query Builder';
-
-$string['privacy:metadata'] = 'The SQL query builder only enables other plugins to make database queries.';
+class provider implements null_provider {
+    /**
+     * Get the language string identifier
+     *
+     * @return string Explaination why the plugin stores no user data
+     */
+    public static function get_reason(): string {
+        return 'privacy:metadata';
+    }
+}
