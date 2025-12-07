@@ -20,7 +20,7 @@ use core_privacy\local\metadata\null_provider;
 
 /**
  * Data privacy provider
- * 
+ *
  * @copyright Konrad Ebel <konrad.ebel@posteo.com>
  * @package   local_sqlquerybuilder
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
