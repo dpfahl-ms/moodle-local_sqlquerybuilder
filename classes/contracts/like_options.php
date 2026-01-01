@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query\where;
+namespace local_sqlquerybuilder\contracts;
 
 /**
  * Options to compare two strings
@@ -24,8 +24,15 @@ namespace local_sqlquerybuilder\query\where;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class like_options {
+    /** @param bool $casesensitive Whether to differ between small and big letters, e.g. A or a */
     public bool $casesensitive = false;
+
+    /** @param bool $accentsensitive Whether to differ between letters with accents or without, e.g. á or a */
     public bool $accentsensitive = false;
+
+    /** @param bool $escape Whether to escape given string (needed if want to search for % or _) */
     public bool $escape = false;
+
+    /** @param bool $escapestring What to use as escape string */
     public string $escapestring = '\\';
 }

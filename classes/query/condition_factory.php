@@ -14,34 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query\orderings;
+namespace local_sqlquerybuilder\query;
 
-use local_sqlquerybuilder\contracts\i_expression;
+use local_sqlquerybuilder\contracts\i_condition_factory;
 
 /**
- * Represents an ordering
+ * Creates a new condition
  *
  * @package     local_sqlquerybuilder
- * @copyright   Konrad Ebel
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   2025 Konrad Ebel <despair2400@proton.me>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class ordering implements i_expression {
-    public function __construct(
-        private string $column,
-        private bool $ascending,
-        private array $params = []
-    ) {
-    }
-
-    public function get_sql(): string {
-        if ($this->ascending) {
-            return "$this->column ASC";
-        } else {
-            return "$this->column DESC";
-        }
-    }
-
-    public function get_params(): array {
-        return $this->params;
+class condition_factory implements i_condition_factory {
+    public function create(): condition {
+        return new condition();
     }
 }

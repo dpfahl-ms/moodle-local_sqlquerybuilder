@@ -16,7 +16,10 @@
 
 namespace local_sqlquerybuilder\query;
 
+use core\di;
 use local_sqlquerybuilder\contracts\i_expression;
+use local_sqlquerybuilder\contracts\i_condition_factory;
+use local_sqlquerybuilder\contracts\i_condition;
 
 /**
  * Grouping trait
@@ -26,85 +29,44 @@ use local_sqlquerybuilder\contracts\i_expression;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class grouping implements i_expression {
-    /**
-     * @var array of group bu clauses
-     */
     protected array $groupby = [];
-    /**
-     * @var array of havings
-     */
-    protected array $having = [];
+    protected i_condition $having;
 
-    /**
-     * Group by one or more columns
-     *
-     * @param string ...$column Columns to group by
-     */
+    public function __construct() {
+        $this->having = di::get(i_condition_factory::class)->create();
+    }
+
     public function group_by(string ...$column): void {
         $this->groupby = $column;
     }
 
-    /**
-     * Add a HAVING condition with AND logic.
-     *
-     * @param string $column The column name
-     * @param string $operator The comparison operator (=, !=, >, <, >=, <=, LIKE, etc.)
-     * @param mixed $value The value to compare against
-     */
     public function having(string $column, string $operator, mixed $value): void {
-        $this->having[] = [
-            'type' => 'AND',
-            'column' => $column,
-            'operator' => $operator,
-            'value' => $value,
-        ];
+        $this->having->where($column, $operator, $value);
     }
 
-    /**
-     * Add a HAVING condition with OR logic.
-     *
-     * @param string $column The column name
-     * @param string $operator The comparison operator (=, !=, >, <, >=, <=, LIKE, etc.)
-     * @param mixed $value The value to compare against
-     */
     public function or_having(string $column, string $operator, mixed $value): void {
-        $this->having[] = [
-            'type' => 'OR',
-            'column' => $column,
-            'operator' => $operator,
-            'value' => $value,
-        ];
+        $this->having->or_where($column, $operator, $value);
     }
 
-    /**
-     * Export the GROUP BY clause as a SQL string.
-     *
-     * @return string The complete GROUP BY clause SQL string
-     */
     public function get_sql(): string {
         if (empty($this->groupby)) {
             return '';
         }
+
         $groupbyclause = 'GROUP BY ' . implode(', ', $this->groupby);
-        if (empty($this->having)) {
+        if ($this->having->has_no_conditions()) {
             return $groupbyclause;
         }
-        $firstiteration = true;
-        foreach ($this->having as $having) {
-            if ($firstiteration) {
-                $groupbyclause .= ' HAVING ' . $having['column'] . ' ' . $having['operator'] .
-                    ' ' . $having['value'] . ' ';
-                $firstiteration = false;
-            } else {
-                $groupbyclause .= $having['type'] . ' ' . $having['column'] . ' ' . $having['operator'] .
-                    ' ' . $having['value'] . ' ';
-            }
-        }
 
-        return preg_replace('/\s{2,}/', ' ', $groupbyclause);
+        $groupbyclause .= ' HAVING ';
+        $groupbyclause .= $this->having->get_sql();
+        return $groupbyclause;
     }
 
     public function get_params(): array {
-        return [];
+        if (empty($this->groupby)) {
+            return [];
+        }
+        return $this->having->get_params();
     }
 }
