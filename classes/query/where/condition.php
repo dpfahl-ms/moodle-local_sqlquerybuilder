@@ -14,21 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query;
+namespace local_sqlquerybuilder\query\where;
 
 use core\clock;
 use core\di;
-use local_sqlquerybuilder\contracts\i_query;
+use local_sqlquerybuilder\contracts\i_select_query;
 use local_sqlquerybuilder\contracts\i_condition;
 use local_sqlquerybuilder\contracts\like_options;
-use local_sqlquerybuilder\query\where\where_column_comparison;
-use local_sqlquerybuilder\query\where\where_expression;
-use local_sqlquerybuilder\query\where\where_comparison;
-use local_sqlquerybuilder\query\where\or_where_group;
-use local_sqlquerybuilder\query\where\where_fulltext;
-use local_sqlquerybuilder\query\where\where_is_null;
-use local_sqlquerybuilder\query\where\where_in;
-use local_sqlquerybuilder\query\where\where_like;
 
 /**
  * Builds an where expression without WHERE
@@ -108,12 +100,12 @@ class condition implements i_condition {
         return $this;
     }
 
-    public function where_in(string $column, array|i_query $values, bool $negate = false): i_condition {
+    public function where_in(string $column, array|i_select_query $values, bool $negate = false): i_condition {
         $this->conditionparts[] = new where_in($column, $values, $negate);
         return $this;
     }
 
-    public function where_not_in(string $column, array|i_query $values): i_condition {
+    public function where_not_in(string $column, array|i_select_query $values): i_condition {
         return $this->where_in($column, $values, true);
     }
 
@@ -159,7 +151,7 @@ class condition implements i_condition {
     }
 
     public function get_params(): array {
-        $params = array_map(fn (where_expression $expression) => $expression->get_params(), $this->conditionparts);
+        $params = array_map(fn(where_expression $expression) => $expression->get_params(), $this->conditionparts);
         return array_merge(...$params);
     }
 

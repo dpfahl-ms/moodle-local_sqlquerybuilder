@@ -17,19 +17,12 @@
 namespace local_sqlquerybuilder\contracts;
 
 /**
- * Database object to start a query
+ * The query builder interface
  *
  * @package   local_sqlquerybuilder
  * @copyright 2025 Konrad Ebel
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+
  */
-interface i_db {
-    /**
-     * Return a new query object for the given table.
-     *
-     * @param string|i_select_query $nameorquery Name the table name or subquery
-     * @param string|null $alias Alias for the tablename
-     * @return i_select_query Returns itself
-     */
-    public function table(string|i_select_query $nameorquery, ?string $alias = null): i_select_query;
+interface i_update_query extends i_expression, i_joinable {
 }

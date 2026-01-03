@@ -157,19 +157,19 @@ interface i_condition extends i_expression {
      * Filters out all entries not in the list
      *
      * @param string $column Column name to compare.
-     * @param array|i_query $values List of values or query returns a list
+     * @param array|i_select_query $values List of values or query returns a list
      * @return i_condition Returns itself
      */
-    public function where_in(string $column, array|i_query $values): i_condition;
+    public function where_in(string $column, array|i_select_query $values): i_condition;
 
     /**
      * Filters out all entries that are inside the list
      *
      * @param string $column Column name to compare.
-     * @param array|i_query $values List of values or query returns a list
+     * @param array|i_select_query $values List of values or query returns a list
      * @return i_condition Returns itself
      */
-    public function where_not_in(string $column, array|i_query $values): i_condition;
+    public function where_not_in(string $column, array|i_select_query $values): i_condition;
 
     /**
      * Filters out all entries where the current time is before the start column

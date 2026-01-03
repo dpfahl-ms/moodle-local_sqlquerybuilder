@@ -1,0 +1,63 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+namespace local_sqlquerybuilder\contracts;
+
+use dml_exception;
+use stdClass;
+
+/**
+ * The query builder interface
+ *
+ * @package   local_sqlquerybuilder
+ * @copyright 2025 Konrad Ebel
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @method self where(string $column, string $operator, mixed $value)
+ *         Add a WHERE condition comparing a column to a value (Never use for TEXT only VARCHAR).
+ * @method self where_column(string $column, $operator, $othercolumn)
+ *         Add a WHERE condition comparing two columns (Never use for TEXT only VARCHAR).
+ * @method self or_where(string $column, string $operator, $value)
+ *         Add an OR WHERE condition comparing a column to a value (Never use for TEXT only VARCHAR).
+ * @method self where_not(string $column, string $operator, $value)
+ *         Add a WHERE NOT condition (Never use for TEXT only VARCHAR).
+ * @method self or_where_not(string $column, string $operator, $value)
+ *         Add an OR WHERE NOT condition (Never use for TEXT only VARCHAR).
+ * @method self where_fulltext(string $column, string $value)
+ *         Add a full-text search condition.
+ * @method self where_fulltext_not(string $column, string $value)
+ *         Add a negated full-text search condition.
+ * @method self where_like(string $column, string $value, like_options $options = null)
+ *         Add a LIKE condition for partial matches.
+ * @method self where_not_like(string $column, string $value, like_options $options = null)
+ *         Add a NOT LIKE condition.
+ * @method self where_null(string $column)
+ *         Add a condition for the column should be NULL.
+ * @method self or_where_null(string $column)
+ *         Add an OR condition for the column should be NULL.
+ * @method self where_notnull(string $column)
+ *         Add a condition for a column shouldnt be NULL.
+ * @method self or_where_notnull(string $column)
+ *         Add an OR condition for a column shouldnt be NULL.
+ * @method self where_in(string $column, array|i_select_query $values)
+ *         Add a WHERE IN condition.
+ * @method self where_not_in(string $column, array|i_select_query $values)
+ *         Add a WHERE NOT IN condition.
+ * @method self where_currently_active(string $columntimestart, string $columntimeend)
+ *         Add a condition for current time to be between timestart and timeend column.
+ */
+interface i_conditioned extends i_expression {
+}

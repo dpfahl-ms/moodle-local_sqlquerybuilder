@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query;
+namespace local_sqlquerybuilder\query\orderings;
 
 use local_sqlquerybuilder\contracts\i_expression;
-use local_sqlquerybuilder\query\orderings\ordering;
 
 /**
  * Trait that builds a sql statement, that can be exported via
@@ -62,13 +61,13 @@ class orderby implements i_expression {
             return '';
         }
 
-        $formattedorderings = array_map(fn (ordering $order) => $order->get_sql(), $this->orderings);
+        $formattedorderings = array_map(fn(ordering $order) => $order->get_sql(), $this->orderings);
 
         return ' ORDER BY ' . implode(', ', $formattedorderings);
     }
 
     public function get_params(): array {
-        $params = array_map(fn (ordering $order) => $order->get_params(), $this->orderings);
+        $params = array_map(fn(ordering $order) => $order->get_params(), $this->orderings);
         return array_merge(...$params);
     }
 }

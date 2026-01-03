@@ -14,21 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query;
-
-use core\clock;
-use core\di;
-use local_sqlquerybuilder\contracts\i_query;
-use local_sqlquerybuilder\contracts\i_expression;
-use local_sqlquerybuilder\query\where\like_options;
-use local_sqlquerybuilder\query\where\where_column_comparison;
-use local_sqlquerybuilder\query\where\where_expression;
-use local_sqlquerybuilder\query\where\where_comparison;
-use local_sqlquerybuilder\query\where\or_where_group;
-use local_sqlquerybuilder\query\where\where_fulltext;
-use local_sqlquerybuilder\query\where\where_is_null;
-use local_sqlquerybuilder\query\where\where_in;
-use local_sqlquerybuilder\query\where\where_like;
+namespace local_sqlquerybuilder\query\where;
 
 /**
  * Builds an where expression (Including WHERE itself).

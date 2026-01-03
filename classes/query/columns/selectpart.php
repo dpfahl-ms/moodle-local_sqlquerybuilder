@@ -14,13 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query;
+namespace local_sqlquerybuilder\query\columns;
 
 use local_sqlquerybuilder\contracts\i_expression;
-use local_sqlquerybuilder\query\columns\aggregation;
-use local_sqlquerybuilder\query\columns\column_aggregate;
-use local_sqlquerybuilder\query\columns\column_raw;
-use local_sqlquerybuilder\query\columns\column;
 
 /**
  * Trait that builds a sql statement, that can be exported via
@@ -73,7 +69,7 @@ class selectpart implements i_expression {
             $this->select_all();
         }
 
-        $exportedcolumns = array_map(fn (i_expression $col) => $col->get_sql(), $this->columns);
+        $exportedcolumns = array_map(fn(i_expression $col) => $col->get_sql(), $this->columns);
         $select .= implode(', ', $exportedcolumns);
 
         return $select;

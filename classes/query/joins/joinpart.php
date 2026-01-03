@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query;
+namespace local_sqlquerybuilder\query\joins;
 
 use core\di;
 use local_sqlquerybuilder\contracts\i_expression;
 use local_sqlquerybuilder\contracts\i_query;
 use local_sqlquerybuilder\contracts\i_condition_factory;
-use local_sqlquerybuilder\query\joins\join_expression;
-use local_sqlquerybuilder\query\joins\join_types;
+use local_sqlquerybuilder\query\where\condition;
 
 /**
  * Trait that builds a sql statement, that can be exported via

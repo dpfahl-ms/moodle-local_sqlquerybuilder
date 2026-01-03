@@ -14,30 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
-namespace local_sqlquerybuilder\query\froms;
+namespace local_sqlquerybuilder\query\where;
 
-use local_sqlquerybuilder\contracts\i_select_query;
+use local_sqlquerybuilder\contracts\i_condition_factory;
 
 /**
- * Data select from a custom query
+ * Creates a new condition
  *
  * @package     local_sqlquerybuilder
- * @copyright   Konrad Ebel
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright   2025 Konrad Ebel <despair2400@proton.me>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class from_query implements from_expression {
-    public function __construct(
-        private i_select_query $sourcequery,
-        private string $alias,
-    ) {
-    }
-
-    public function get_sql(): string {
-        $from = "($this->sourcequery) AS $this->alias";
-        return $from;
-    }
-
-    public function get_params(): array {
-        return $this->sourcequery->get_params();
+class condition_factory implements i_condition_factory {
+    public function create(): condition {
+        return new condition();
     }
 }
